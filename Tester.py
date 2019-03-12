@@ -2,26 +2,26 @@ from Database import Database
 from Preprocessor import Preprocessor
 from Mapper import Mapper
 from collections import defaultdict
-from Extractor import Extract
+#from Extractor import Extract
 dictionary1 = defaultdict(list)
 dictionary2 = defaultdict(list)
 database_object = Database()
 data_object = Preprocessor()
 
 FILE_PATH = ['sample1.rtf','sample2.rtf','sample3.rtf','sample4.rtf','sample5.rtf','sample6.rtf']
-file_object = Extract(FILE_PATH)
+#file_object = Extract(FILE_PATH)
 mapper = Mapper()
 
 value = []
+var = ['unspecified','other','others']
+
 query = " SELECT * FROM ICD_data WHERE code LIKE %s AND diagnosis LIKE %s"
 query1 = "UPDATE ICD_data SET diagnosis = %s WHERE code = %s "
 query2 = 'SELECT code,diagnosis FROM ICD_data'
 
 def update_data():
     
-
     (icd, diagnosis) = data_object.get_full_data()
- 
     for i in range( len(icd) ): 
         value.append( ( ' '.join(diagnosis[i]) , icd[i].upper() ) ) 
 
@@ -51,7 +51,7 @@ def map_data(diagnosis):
         
         #print( dictionary2 )
 
-        if ( len(dictionary1[disease]) != 1 ):
+        if ( len(dictionary1[disease]) > 1 ):
             for i in range(len(dictionary1[disease])):
 
                 splitted_disease = []
@@ -71,7 +71,7 @@ def map_data(diagnosis):
                 #print(disease)
                 #print(splitted_disease)
                 
-                if 'unspecified' in splitted_icds and (len(splitted_icds) == len(splitted_disease)+1):
+                if ('unspecified' in splitted_icds or 'other' in splitted_icds) and (len(splitted_icds) == len(splitted_disease)+1):
                     print (disease + " - " + dictionary1[disease][i])
         else:
             print (disease + ' - ' + ','.join(dictionary1[disease]))
@@ -85,7 +85,9 @@ if __name__ == '__main__':
     print()
     #update_data()
 
-    diagnosis1 = ['Anemia','Isosporiasis', 'Cyclosporiasis']
-    print( file_object.getalldiagnosis())
-    #map_data(diagnosis1 )
+    diagnosis1 = ['Anemia','Isosporiasis', 'Cyclosporiasis','pancytopenia']
+    #print( file_object.getalldiagnosis())
+
+    #input : list of diagnosis
+    map_data(diagnosis1 )
     
