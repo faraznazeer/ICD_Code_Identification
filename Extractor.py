@@ -1,7 +1,9 @@
+from pyth.plugins.rtf15.reader import Rtf15Reader
+from pyth.plugins.xhtml.writer import XHTMLWriter
+import re
+
 class Extract:
     def __init__(self, files):
-        from pyth.plugins.rtf15.reader import Rtf15Reader
-        from pyth.plugins.xhtml.writer import XHTMLWriter
         import re
         assert type(files) is list, "List of file paths expected"
         self.files = files

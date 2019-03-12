@@ -21,11 +21,11 @@ class Preprocessor:
 
         with open( self.FILE_PATH, 'r') as file:
             for line in file:
-
-                tokens = word_tokenize(line)
+                #line = line.lower()
+                tokens = word_tokenize(line.lower())
                 filtered_tokens = [t for t in tokens if not t in stopword]
                 self.data.append(filtered_tokens)
-                self.icd.append(filtered_tokens[0])
+                self.icd.append(filtered_tokens[0].upper())
                 self.diagnosis.append( filtered_tokens[1:])
                 output.write( ( ' '.join(filtered_tokens)+"\n" )  )
 
