@@ -9,7 +9,7 @@ database_object = Database()
 data_object = Preprocessor()
 
 FILE_PATH = ['sample1.rtf','sample2.rtf','sample3.rtf','sample4.rtf','sample5.rtf','sample6.rtf']
-#file_object = Extract(FILE_PATH)
+file_object = Extract(FILE_PATH)
 mapper = Mapper()
 
 value = []
@@ -73,8 +73,11 @@ def map_data(diagnosis):
                 
                 if ('unspecified' in splitted_icds or 'other' in splitted_icds) and (len(splitted_icds) == len(splitted_disease)+1):
                     print (disease + " - " + dictionary1[disease][i])
-        else:
+
+        elif( len(dictionary1[disease]) == 1 ):
             print (disease + ' - ' + ','.join(dictionary1[disease]))
+        else:
+            print( 'Not mapped(Sub string absent) !')
     print()
 
    # print(dictionary)   
