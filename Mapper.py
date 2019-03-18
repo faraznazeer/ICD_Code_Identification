@@ -1,4 +1,6 @@
 from Database import Database
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
 class Mapper:
 
@@ -12,6 +14,16 @@ class Mapper:
         self.final_data = []
         self.special = ["unspecified", "others", "other","disease","diseases"]
         
+
+    def processitem(self, item):
+        
+        stopword = list(stopwords.words('english'))
+        stopword = list(filter(lambda a: a != 'other', stopword))
+        stopword.extend( [',','/','due','[',']','(',')'] )
+
+        filtered_items = [t for t in item.split(' ') if not t in stopword]
+
+        return ( ' '.join(filtered_items) )
 
     def search(self, keyword, icd, data ):
 
@@ -53,22 +65,22 @@ class Mapper:
 
     def map(self, diagnosis):
         
-        self.database.connect('localhost', 'root', 'zaraf', 'ICD')
         codes = []
+        self.database.connect('localhost', 'root', 'zaraf', 'ICD')
+        data_element = self.database.fetch_data(self.query, None)
+        self.icd = [ x[0] for x in data_element]
+        self.data = [ x[1].split(' ') for x in data_element]
+
         for item in diagnosis:
 
-            #word = self.processitem(item)
-            data_element = self.database.fetch_data(self.query, None)
+            item = self.processitem(item)
 
-            self.icd = [ x[0] for x in data_element]
-            self.data = [ x[1].split(' ') for x in data_element]
-            
             self.final_icd = self.icd
             self.final_data = self.data
 
             for keyword in item.split(' '):
                 if( self.search( keyword , self.final_icd, self.final_data) ):
-                    print(self.final_data)
+                    pass #print(self.final_data)
 
 
             if( len( self.final_icd ) == 1):
